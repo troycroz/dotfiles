@@ -1,0 +1,164 @@
+# .bash_profile_generic
+# Troy Crosby
+
+#Most recent commands:
+#cut -f1 -d" " .bash_history | sort | uniq -c | sort -nr | head -n 30
+
+#Bash prompt
+#http://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html
+#[name: pwd]$
+#export PS1="[\u: \W]$ "
+export PS1="[\W]$ "
+
+#Git
+alias stash="git stash"
+alias checkout="git checkout"
+alias commit="git commit"
+alias pull="git pull"
+alias push="git push"
+alias add="git add"
+alias branch="git branch"
+
+alias gs="git status"
+alias gb="git branch"
+alias gba="git branch -a"
+
+alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
+
+
+#AWS shortcuts
+#toggle AWS dev/prod account keys
+alias awsd="source ~/scripts/awsDev"
+alias dev="source ~/scripts/awsDev"
+alias awsp="source ~/scripts/awsProd"
+alias prod="source ~/scripts/awsProd"
+#shortcuts
+alias asd="as-describe-auto-scaling-groups"
+alias elbd="elb-describe-instance-health"
+#command short cuts based on the numerical portion of a AWS intance tag (i-586283)
+function termdec { as-terminate-instance-in-auto-scaling-group i-$@ --decrement-desired-capacity; }
+function term { as-terminate-instance-in-auto-scaling-group i-$@ --no-decrement-desired-capacity; }
+function infra { ec2-describe-tags -F "value=*$@*"; }
+function inf { ec2-describe-tags -F "value=*$@*"; }
+function elbr { elb-register-instances-with-lb $1 --instances i-$2; }
+function elbdr { elb-deregister-instances-from-lb $1 --instances i-$2; }
+
+
+#Grails
+alias gip="grails install-plugin"
+alias gpp="grails package-plugin"
+
+#Misc utils
+alias cpu="top"
+alias ram="top"
+alias mem="top"
+alias memory="top"
+alias flushcache="dscacheutil -flushcache"
+alias flush="dscacheutil -flushcache"
+
+#Overloads
+alias mkdir="mkdir -p" #create intermediate dirs
+
+#Common shortcuts
+alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
+alias sub="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
+alias s="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
+alias ls="ls -GF"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias .......="cd ../../../../../.."
+alias py="python"
+alias ~="cd ~"
+alias h="cd ~"
+alias c="clear"
+alias bp="subl ~/.bash_profile*"
+alias sbp="source ~/.bash_profile*"
+alias brc="subl ~/.bashrc"
+alias sbrc="source ~/.bashrc"
+alias hist="history | grep"
+alias hg="history | grep"
+alias lsg="ls | grep $a"
+alias psg="ps aux | grep $a"
+alias finder="open ."
+alias f="open ."
+alias o="open ."
+alias hosts="s /etc/hosts"
+
+#Reminders
+alias track="echo 'git checkout --track -b localname origin/name'"
+alias grepp="echo 'grep 'strin' *'"
+
+#Jira cli
+alias jira="/usr/local/lib/node_modules/jira-cmd/bin/jira.js"
+alias j="jira"
+alias jo="open http://jira.wapolabs.com/secure/RapidBoard.jspa?quickFilter=7&rapidView=4"
+
+#google cal cli
+alias gcal="/Users/crosbyts/projects2/gcalcli/gcalcli"
+alias gcala="gcal agenda --cal=Crosby"
+alias gcalo="open http://calendar.google.com/"
+
+#fun
+alias nyan='TERM=1 telnet miku.acm.uiuc.edu'
+alias starwars="telnet towel.blinkenlights.nl"
+
+
+
+#quick search functions
+alias qfind="find . -name "                 # qfind:    Quickly search for file
+ff () { /usr/bin/find . -name "$@" ; }      # ff:       Find file under the current directory
+ffs () { /usr/bin/find . -name "$@"'*' ; }  # ffs:      Find file whose name starts with a given string
+ffe () { /usr/bin/find . -name '*'"$@" ; }  # ffe:      Find file whose name ends with a given string
+
+#Multi format unzip/extract
+function extract()
+{
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xvjf $1     ;;
+            *.tar.gz)    tar xvzf $1     ;;
+            *.bz2)       bunzip2 $1      ;;
+            *.rar)       unrar x $1      ;;
+            *.gz)        gunzip $1       ;;
+            *.tar)       tar xvf $1      ;;
+            *.tbz2)      tar xvjf $1     ;;
+            *.tgz)       tar xvzf $1     ;;
+            *.zip)       unzip $1        ;;
+            *.Z)         uncompress $1   ;;
+            *.7z)        7z x $1         ;;
+            *)           echo "'$1' cannot be extracted via >extract<" ;;
+        esac
+    else
+        echo "'$1' is not a valid file!"
+    fi
+}
+
+#Apache toggle: "share [on/off]"
+function share {
+    if [ "$1" == "off" ]; then sudo apachectl stop; else sudo apachectl start; fi
+}
+
+#Set terminal tab bg color
+function tabc {
+    NAME=$1; if [ -z "$NAME" ]; then NAME="Default"; fi
+    osascript -e "tell application \"Terminal\" to set current settings of front window to settings set \"$NAME\""
+}
+alias blue="tabc basic"
+alias red="tabc basicssh"
+
+#Set tab title
+function tabname {
+     printf "\e]1;$1\a"
+}
+#Set tab title on terminal open or sourcing .bash_profile
+tabname ${PWD##*/}
+
+
+#source .bashrc
+if [ -f ~/.bashrc ]; then
+. ~/.bashrc
+fi
